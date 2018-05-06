@@ -28,17 +28,15 @@
 
     export default {
         name: "currentWeather",
+        props:["currentw"],
         data() {
           return {
-            cityName : "Castle Rock",
-            country : "US",
-            temperature : {min : 0, max : 0, value : 0},
-            humidity : { unit : "%", value : 100},
-            pressure : {unit : "hPa", value : 600},
-            lastupdate : "2018-05-05T09:20:00",
-            wind : {gusts : "", speed : {name : "Calm", value : 1.5}},
-            direction : {code : "SSW", name : "South-southwest", value : 200},
-            sun : {set : "2018-05-05T19:03:44", rise : "2018-05-05T01:28:27"}
+            city : this.currentw.city,
+            temperature : this.currentw.temperature,
+            humidity : this.currentw.humidity,
+            pressure : this.currentw.pressure,
+            lastupdate : this.currentw.lastupdate.value,
+            wind : this.currentw.wind,
           };
         },
         computed : {
@@ -51,11 +49,11 @@
 
           },
           sunRise(){
-            var d = new Date(this.sun.rise);
+            var d = new Date(this.city.sun.rise);
             return (d.getHours()+":"+d.getMinutes());
           },
           sunSet(){
-            var d = new Date(this.sun.set);
+            var d = new Date(this.city.sun.set);
             return (d.getHours()+":"+d.getMinutes());
           }
 

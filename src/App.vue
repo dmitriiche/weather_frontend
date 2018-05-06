@@ -16,7 +16,11 @@
       </div>
     </div>
     <div class="row">
-      <app-city-weather class="col-sm-12"></app-city-weather>
+      <app-city-weather v-if="weatherReceived && forecastReceived" class="col-sm-12"
+                        :currentw="currentWeather"
+                        :forecastw="forecastWeather"
+                        :forecastReceived="forecastReceived">
+      </app-city-weather>
     </div>
   </div>
 </template>
@@ -31,20 +35,37 @@
     },
     data: function() {
       return {
-        city: ""
+        city : "",
+        currentWeather : {},
+        weatherReceived : false,
+        forecastWeather : {},
+        forecastReceived : false,
       };
     },
     methods: {
       submit(){
         if (this.city.length<=0)
           return;
+        this.weatherReceived = false;
         this.$http.get("api/v1/weather/"+this.city)
           .then(response => {
-            console.log(response.json());
             return response.json();
           })
           .then(data => {
-            console.log(data);
+            this.currentWeather = data.current;;
+            this.weatherReceived = true;
+          })
+          .catch(error => {
+            console.log(error.message);
+          });
+
+        this.$http.get("api/v1/forecast/"+this.city)
+          .then(response => {
+            return response.json();
+          })
+          .then(data => {
+            this.forecastWeather = data.weatherdata.forecast.time;
+            this.forecastReceived = true;
           })
           .catch(error => {
             console.log(error.message);
