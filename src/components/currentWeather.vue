@@ -1,5 +1,5 @@
 <template>
-  <div class="cotainer">
+  <div class="">
 
     <div class="row">
       <div class="col-sm-6">

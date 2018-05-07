@@ -9,7 +9,7 @@
               <input type="text" placeholder="your city name" class="border-color" v-model="city">
             </div>
             <div class="form-group">
-              <button class="btn btn-outline-info d-block mx-auto" @click="submit">Find</button>
+              <button class="btn btn-outline-info d-block mx-auto" type="button" @click="submit">Find</button>
             </div>
           </form>
         </div>

@@ -1,8 +1,6 @@
 <template>
-    <div class="container">
-      <!--<app-day-forecast-weather></app-day-forecast-weather>-->
-      <app-day-forecast-weather v-for="day in dayForecaComponents" :day="day" :key="day"></app-day-forecast-weather>
-      <!--<app-quote  v-for="quote in quotes" :message="quote"></app-quote>-->
+    <div class="row">
+      <app-day-forecast-weather v-for="day in dayForecaComponents" :day="day" :key="day.dayname"></app-day-forecast-weather>
     </div>
 </template>
 
@@ -30,14 +28,22 @@
 
             for (let key in dayObj)
             {
-              minList.push(dayObj[key].temperature.min);
-              maxList.push(dayObj[key].temperature.max);
+              minList.push(Math.round(dayObj[key].temperature.min));
+              maxList.push(Math.round(dayObj[key].temperature.max));
             }
             var max = Math.max(...maxList);
             var min = Math.min(...minList);
 
             return {min: min, max : max};
           }
+          var weekday = new Array(7);
+          weekday[0] =  "Sunday";
+          weekday[1] = "Monday";
+          weekday[2] = "Tuesday";
+          weekday[3] = "Wednesday";
+          weekday[4] = "Thursday";
+          weekday[5] = "Friday";
+          weekday[6] = "Saturday";
 
           var today = new Date(Date.now());
           var tommorow = new Date(Date.now());
@@ -63,16 +69,16 @@
             }
           }
           var todayTemp = getMinMax(todayForecast);
+          todayTemp.name = "Today";
+          this.dayForecaComponents.push(todayTemp);
+
           var tommorowTemp = getMinMax(tommorowForecast);
+          tommorowTemp.name = "Tommorow";
+          this.dayForecaComponents.push(tommorowTemp);
+
           var dayaftertomorrowTemp = getMinMax(dayAfterTomorrowForecast);
-
-
-          console.log(todayForecast);
-          console.log(tommorowForecast);
-          console.log(dayAfterTomorrowForecast);
-          console.log(todayTemp);
-          console.log(tommorowTemp);
-          console.log(dayaftertomorrowTemp);
+          dayaftertomorrowTemp.name = weekday[dayaftertomorrow.getDay()];
+          this.dayForecaComponents.push(dayaftertomorrowTemp);
         }
     }
 </script>

@@ -5,10 +5,17 @@
         <h1>{{cityName}}, {{country}}</h1>
       </div>
       <div class="row">
-        <b>Current conditions</b>
+        <div class="col-sm-4 text-left app-header">
+          <b>Current conditions</b>
+        </div>
+        <div class="col-sm-8 text-left app-header">
+          <b>3 day outlook</b>
+        </div>
       </div>
-      <app-current-weather class="col-sm-4" :currentw="currentw"></app-current-weather>
-      <app-forecast-weather v-if="forecastReceived" :forecastw="forecastw"></app-forecast-weather>
+      <div class="row">
+        <app-current-weather class="col-sm-4" :currentw="currentw"></app-current-weather>
+        <app-forecast-weather class="col-sm-8" v-if="forecastReceived" :forecastw="forecastw"></app-forecast-weather>
+      </div>
     </div>
 </template>
 
@@ -29,15 +36,19 @@
             country : this.currentw.city.country
           };
         }
-        // created() {
-        //   console.log("cityWeather component created!");
-        //   console.log(this.currentw);
-        //   console.log(this.forecastw);
-        //   console.log(this.forecastReceived);
-        // }
     }
 </script>
 
 <style scoped>
-
+  .app-header{
+    font-size: 1.2em;
+    line-height: 1.1em;
+    font-weight: 700;
+    padding: 4px 8px;
+    background-color: #b3dfe7;
+  },
+  [class*="col-"] {
+    background-clip: padding-box;
+    border: 5px solid transparent;
+  }
 </style>
