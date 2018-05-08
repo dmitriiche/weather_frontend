@@ -4,9 +4,11 @@
       <div class="col-md-12">
         <h1>Weather Demo</h1>
         <div class="mx-auto">
-          <form class=" ">
+          <form class=" " v-on:submit.prevent="submit">
             <div class="form-group">
-              <input type="text" placeholder="your city name" class="border-color" v-model="city">
+              <input type="text" placeholder="your city name" class="border-color" :class="{ 'receive-error' : receiveError }"
+                     v-model="city"
+                     @click="emptyInput">
             </div>
             <div class="form-group">
               <button class="btn btn-outline-info d-block mx-auto" type="button" @click="submit">Find</button>
@@ -40,6 +42,7 @@
         weatherReceived : false,
         forecastWeather : {},
         forecastReceived : false,
+        receiveError : false
       };
     },
     methods: {
@@ -47,16 +50,29 @@
         if (this.city.length<=0)
           return;
         this.weatherReceived = false;
+        this.forecastReceived = false,
+        this.currentWeather = {};
+        this.forecastWeather = {};
+        this.receiveError = false;
+
         this.$http.get("api/v1/weather/"+this.city)
           .then(response => {
             return response.json();
           })
           .then(data => {
-            this.currentWeather = data.current;;
-            this.weatherReceived = true;
+            console.log(data);
+            if ('current' in data){
+              this.currentWeather = data.current;
+              this.weatherReceived = true;
+            }
+            else {
+              throw "city not found";
+            }
           })
           .catch(error => {
-            console.log(error.message);
+            this.city = "city not found";
+            this.receiveError = true;
+            console.log(error);
           });
 
         this.$http.get("api/v1/forecast/"+this.city)
@@ -64,24 +80,37 @@
             return response.json();
           })
           .then(data => {
-            this.forecastWeather = data.weatherdata.forecast.time;
-            this.forecastReceived = true;
+            if ("weatherdata" in data){
+              this.forecastWeather = data.weatherdata.forecast.time;
+              this.forecastReceived = true;
+            }
+            else {
+              throw "city not found";
+            }
           })
           .catch(error => {
-            console.log(error.message);
+            this.city = "city not found";
+            this.receiveError = true;
+            console.log(error);
           })
+      },
+      emptyInput(){
+        this.city = "";
       }
     }
   }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+  }
+  .receive-error {
+    box-shadow: 0 0 3px #CC0000; margin: 10px
+  }
 </style>
